@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.13)
 find_package(LLVM REQUIRED CONFIG)
 
 list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
@@ -17,7 +17,11 @@ include(HandleLLVMOptions) # important: matches compiler flags to LLVM/Clang bui
 include(AddLLVM)
 #add_library(LLVMContech MODULE Contech.cpp)
 
-add_llvm_loadable_module( LLVMContech
+message(STATUS "LLVM Definitions ${LLVM_DEFINITIONS}")
+message(STATUS "LLVM Include Dirs ${LLVM_INCLUDE_DIRS}")
+message(STATUS "LLVM CMake definitions ${LLVM_CMAKE_DIR}")
+
+add_llvm_library( LLVMContech
   Contech.cpp
   BufferCheckAnalysis.cpp
   LoopIV.cpp
@@ -25,4 +29,4 @@ add_llvm_loadable_module( LLVMContech
   Support.cpp
   )
 
-target_link_libraries(LLVMContech)
+target_link_libraries(LLVMContech -lecotools)

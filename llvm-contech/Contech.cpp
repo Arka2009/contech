@@ -10,11 +10,6 @@
 #define DEBUG_TYPE "Contech"
 
 #include "llvm/Config/llvm-config.h"
-
-#if LLVM_VERSION_MAJOR==2
-#error LLVM Version 3.8 or greater required
-#else
-#if LLVM_VERSION_MINOR>=8
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DataLayout.h"
 #include "llvm/IR/Instructions.h"
@@ -30,10 +25,6 @@
 #include "llvm/IR/GetElementPtrTypeIterator.h"
 #include "llvm/IR/DebugLoc.h"
 #define ALWAYS_INLINE (Attribute::AttrKind::AlwaysInline)
-#else
-#error LLVM Version 3.8 or greater required
-#endif
-#endif
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Pass.h"
 #include "llvm/Transforms/Utils/BasicBlockUtils.h"
@@ -50,6 +41,8 @@
 #include "BufferCheckAnalysis.h"
 #include "Contech.h"
 #include "LoopIV.h"
+
+#include <ecotools/errordefs.h>
 
 using namespace llvm;
 using namespace std;
@@ -167,12 +160,18 @@ Constant* Contech::getFunction(Module &M, const char* fname, const char* fmt, bo
         }
         
         FunctionType* funTy = FunctionType::get(retTy, ArrayRef<Type*>(argTy, (argLen - 1)), isVarg);
-        return M.getOrInsertFunction(fname, funTy);
+        Constant *tmpC = dyn_cast<Constant>(M.getOrInsertFunction(fname, funTy).getCallee());
+        if (tmpC == NULL)
+            PRINTERROR("Unable to cast Value* to Constant* in getFunction");
+        return tmpC;
     }
     else
     {
         FunctionType* funVoidVoidTy = FunctionType::get(retTy, isVarg);
-        return M.getOrInsertFunction(fname, funVoidVoidTy);
+        Constant *tmpC = dyn_cast<Constant>(M.getOrInsertFunction(fname, funVoidVoidTy).getCallee());
+        if (tmpC == NULL)
+            PRINTERROR("Unable to cast Value* to Constant* in getFunction");
+        return tmpC;
     }
     
     return NULL;
@@ -296,7 +295,7 @@ bool Contech::doInitialization(Module &M)
                        static_cast<Type *>(funVoidPtrVoidPtrTy)->getPointerTo(),
                        cct.voidPtrTy};
     FunctionType* funIntPthreadPtrVoidPtrVoidPtrFunVoidPtr = FunctionType::get(cct.int32Ty, ArrayRef<Type*>(argsCTA,4), false);
-    cct.createThreadActualFunction = M.getOrInsertFunction("__ctThreadCreateActual", funIntPthreadPtrVoidPtrVoidPtrFunVoidPtr);
+    cct.createThreadActualFunction = dyn_cast<Constant>(M.getOrInsertFunction("__ctThreadCreateActual", funIntPthreadPtrVoidPtrVoidPtrFunVoidPtr).getCallee());
 
     cct.ContechMDID = ctx.getMDKindID("ContechInst");
 

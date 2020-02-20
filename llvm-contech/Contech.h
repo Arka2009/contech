@@ -1270,7 +1270,7 @@ namespace llvm {
 
                 // If Contech has formed the basic blocks, then there should be 1 successor
                 assert(sucB != NULL);
-                TerminatorInst* ti = sucB->getTerminator();
+                Instruction* ti = sucB->getTerminator(); //amaity : TerminatorInst have been removed (http://llvm.1065342.n5.nabble.com/llvm-dev-Missing-TerminatorInst-in-the-trunk-no-350084-td124789.html#a124790)
                 bool isSyncFrame = false;
                 for (unsigned i = 0; i < ti->getNumSuccessors(); i++)
                 {
