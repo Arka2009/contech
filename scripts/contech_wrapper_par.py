@@ -30,7 +30,7 @@ def main(isCpp = False, markOnly = False, minimal = False, hammer = False):
             CLANGPP = CLANG + "++"
             OPT = CONTECH_LLVM_HOME + "/bin/opt"
         else:
-            LLVMCONTECH = CONTECH_HOME + "/llvm-contech/lib/LLVMContech.so"
+            LLVMCONTECH = CONTECH_HOME + "/llvm-contech/build/lib/LLVMContech.so"
             CLANG = "clang"
             CLANGPP = "clang++"
             OPT = "opt"
@@ -49,7 +49,7 @@ def main(isCpp = False, markOnly = False, minimal = False, hammer = False):
             stateFile = CONTECH_HOME + "/scripts/output/contechStateFile.temp"
 
     else:        
-        print ">Error: Could not find contech installation. Set CONTECH_HOME to the root of your contech directory."
+        print(">Error: Could not find contech installation. Set CONTECH_HOME to the root of your contech directory.")
         exit(1)
     
     #LOCAL = "/net/tinker/local"
@@ -69,7 +69,8 @@ def main(isCpp = False, markOnly = False, minimal = False, hammer = False):
     if ARM == True:
         CFLAGS="--verbose -pthread"
     else:
-        CFLAGS="--verbose -pthread"
+        # CFLAGS="--verbose -pthread"
+        CFLAGS="-pthread"
 
     # Choose correct compiler
     if isCpp:
@@ -244,7 +245,7 @@ def main(isCpp = False, markOnly = False, minimal = False, hammer = False):
                         pcall(["cd", TMPARDIR, ";", CONTECH_HOME + "/scripts/uniq_ar_x.sh", aFilename])
                         remFlags.append(flag)
                 for f in remFlags:
-                    print "Remove: " + f + "\t from: " + CFLAGS
+                    print("Remove: " + f + "\t from: " + CFLAGS)
                     CFLAGS = CFLAGS.replace(f, "")
                 oFromA = glob.glob(TMPARDIR + "/*.o")
                 for f in oFromA:

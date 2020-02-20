@@ -25,4 +25,4 @@ add_llvm_loadable_module( LLVMContech
   Support.cpp
   )
 
-target_link_libraries(LLVMContech)
+target_link_libraries(LLVMContech -lecotools)

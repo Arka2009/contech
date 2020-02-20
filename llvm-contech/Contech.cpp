@@ -50,6 +50,7 @@
 #include "BufferCheckAnalysis.h"
 #include "Contech.h"
 #include "LoopIV.h"
+#include <ecotools/errordefs.h>
 
 using namespace llvm;
 using namespace std;
@@ -398,7 +399,7 @@ bool Contech::runOnModule(Module &M)
         else if (classifyFunctionName(fmn) != NONE ||
                  __ctStrCmp(fmn, "__ct") == 0)
         {
-            errs() << "SKIP: " << fmn << "\n";
+            errs() << "SKIP1: " << fmn << "\n";
             if (fmn == fn)
             {
                 free(fn);
@@ -409,7 +410,7 @@ bool Contech::runOnModule(Module &M)
         // then it can be skipped
         else if (contechAddedFunctions.find(&*F) != contechAddedFunctions.end())
         {
-            errs() << "SKIP: " << fmn << "\n";
+            errs() << "SKIP2: " << fmn << "\n";
             if (fmn == fn)
             {
                 free(fn);
@@ -548,8 +549,12 @@ bool Contech::runOnModule(Module &M)
             }
             
             // HACK!  Skip blocks that are the pre elides.
-            //if(lib->second.preElide == true) {continue;}
-            assert(lib->second.preElide == false);
+            if(lib->second.preElide == true) {continue;}
+            // assert(lib->second.preElide == false);
+            // if (lib->second.preElide) {
+            //     errs() << *B << "\n";
+            //     PRINTERROR("Block Block is preElide");
+            // }
             
             Value* sbbc = lib->second.posValue;
             Value* argsCheck[] = {sbbc};
