@@ -1245,7 +1245,7 @@ bool Contech::internalRunOnBasicBlock(BasicBlock &B,  Module &M, int bbid, const
 #endif
 
         // In LLVM 3.3+, switch to Monotonic and not Acquire
-        Instruction* fenI = new FenceInst(M.getContext(), AtomicOrdering::Acquire, SingleThread, bufV);
+        Instruction* fenI = new FenceInst(M.getContext(), AtomicOrdering::Acquire, SyncScope::SingleThread, bufV);
         MarkInstAsContechInst(fenI);
     }
 
@@ -1273,7 +1273,7 @@ bool Contech::internalRunOnBasicBlock(BasicBlock &B,  Module &M, int bbid, const
                 sbbc = CallInst::Create(cct.storeBasicBlockCompFunction, ArrayRef<Value*>(argsBBc, 6), "", aPhi);
                 MarkInstAsContechInst(sbbc);
 
-                Instruction* fenI = new FenceInst(M.getContext(), AtomicOrdering::Release, SingleThread, aPhi);
+                Instruction* fenI = new FenceInst(M.getContext(), AtomicOrdering::Release, SyncScope::SingleThread, aPhi);
                 MarkInstAsContechInst(fenI);
                 iPt = aPhi;
             }
@@ -1283,7 +1283,7 @@ bool Contech::internalRunOnBasicBlock(BasicBlock &B,  Module &M, int bbid, const
                 sbbc = CallInst::Create(cct.storeBasicBlockCompFunction, ArrayRef<Value*>(argsBBc, 6), "", convertIterToInst(I));
                 MarkInstAsContechInst(sbbc);
 
-                Instruction* fenI = new FenceInst(M.getContext(), AtomicOrdering::Release, SingleThread, convertIterToInst(I));
+                Instruction* fenI = new FenceInst(M.getContext(), AtomicOrdering::Release, SyncScope::SingleThread, convertIterToInst(I));
                 MarkInstAsContechInst(fenI);
                 iPt = convertIterToInst(I);
             }
