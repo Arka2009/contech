@@ -8,3 +8,7 @@
 *.e?????
 nohup.out
 llvm/lib/Transforms/lib/
+*.dot
+*.png
+*.swp
+*.svp
