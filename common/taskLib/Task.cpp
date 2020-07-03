@@ -587,12 +587,12 @@ string Task::toString() const {
     out << "endTime:" << endTime << endl;
     out << "Type:" << type << endl;
 
-    out << "a:";
+    out << "a:{\n";
     for (Action action : a)
     {
-        out << action.toString();
+        out << action.toString() << endl;
     }
-    out << endl;
+    out <<"\n}"<< endl;
 
     out << "s:";
     for (TaskId task : s)

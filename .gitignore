@@ -12,3 +12,6 @@ llvm/lib/Transforms/lib/
 *.png
 *.swp
 *.svp
+*.bkp
+/.vscode/
+/build/
